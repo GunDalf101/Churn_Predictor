@@ -1,6 +1,4 @@
-"""
-Main training script for the churn prediction model.
-"""
+# Train churn prediction model
 
 import pandas as pd
 from pathlib import Path
@@ -16,29 +14,30 @@ from .utils import plot_feature_importance, plot_confusion_matrix, plot_roc_curv
 from .config import CATEGORICAL_FEATURES, NUMERICAL_FEATURES
 
 def main():
-    # Load and preprocess data
+    """Train and evaluate the churn prediction model."""
+    # Load data
     print("Loading and preprocessing data...")
     df = load_data()
     df = preprocess_data(df)
     
-    # Create engineered features
+    # Features
     print("\nCreating engineered features...")
     df = create_features(df)
     
-    # Prepare train-test split
+    # Split data
     X_train, X_test, y_train, y_test = prepare_train_test_data(df)
     
-    # Initialize and train model
+    # Train
     print("\nTraining model...")
     model = ChurnPredictor()
     model.train(X_train, y_train)
     
-    # Evaluate model
+    # Evaluate
     print("\nEvaluating model...")
     metrics = model.evaluate(X_test, y_test)
     print_metrics(metrics)
     
-    # Plot results
+    # Plots
     print("\nGenerating plots...")
     feature_names = NUMERICAL_FEATURES + [
         f"{col}_{val}" for col in CATEGORICAL_FEATURES 
@@ -48,7 +47,7 @@ def main():
     plot_confusion_matrix(metrics['confusion_matrix'])
     plot_roc_curve(y_test, model.predict_proba(X_test)[:, 1])
     
-    # Save model
+    # Save
     print("\nSaving model...")
     model.save_model()
     print("Model saved successfully!")

@@ -2,25 +2,27 @@
 Configuration module for the churn prediction project.
 """
 
+# Project configuration
+
 import os
 from pathlib import Path
 
-# Project paths
+# Paths
 ROOT_DIR = Path(__file__).parent.parent
 DATA_DIR = ROOT_DIR / "data"
 MODELS_DIR = ROOT_DIR / "models"
 REPORTS_DIR = ROOT_DIR / "reports"
 
-# Create directories if they don't exist
+# Create dirs
 DATA_DIR.mkdir(exist_ok=True)
 MODELS_DIR.mkdir(exist_ok=True)
 REPORTS_DIR.mkdir(exist_ok=True)
 
-# Data file paths
+# Data paths
 RAW_DATA_PATH = DATA_DIR / "raw" / "Churn_Modelling.csv"
 PROCESSED_DATA_PATH = DATA_DIR / "processed" / "processed_data.csv"
 
-# Feature lists
+# Features
 CATEGORICAL_FEATURES = [
     'Geography',
     'Gender',
@@ -44,12 +46,12 @@ NUMERICAL_FEATURES = [
     'ZeroBalance',
 ]
 
-# Model parameters
+# Model settings
 RANDOM_STATE = 42
 TEST_SIZE = 0.2
 TARGET_COLUMN = 'Exited'
 
-# XGBoost parameters optimized for churn prediction
+# XGBoost params
 MODEL_PARAMS = {
     'classifier__n_estimators': [300, 400, 500],
     'classifier__max_depth': [4, 5, 6],
@@ -58,7 +60,7 @@ MODEL_PARAMS = {
     'classifier__gamma': [0, 0.1, 0.2],
     'classifier__subsample': [0.8, 0.9, 1.0],
     'classifier__colsample_bytree': [0.8, 0.9, 1.0],
-    'classifier__scale_pos_weight': [1, 2, 3],  # Added to handle class imbalance
+    'classifier__scale_pos_weight': [1, 2, 3],
     'smote__k_neighbors': [3, 5],
     'smote__sampling_strategy': [0.7, 0.8]
 } 

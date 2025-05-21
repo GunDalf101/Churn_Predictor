@@ -2,6 +2,8 @@
 Utility functions for the churn prediction project.
 """
 
+# Plotting and metrics utilities
+
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -9,14 +11,7 @@ import seaborn as sns
 from typing import List, Dict, Any
 
 def plot_feature_importance(model, feature_names: List[str], top_n: int = 10):
-    """
-    Plot feature importance from the trained model.
-    
-    Args:
-        model: Trained model with feature_importances_ attribute
-        feature_names: List of feature names
-        top_n: Number of top features to plot
-    """
+    """Plot feature importance from the trained model."""
     importances = model.feature_importances_
     indices = np.argsort(importances)[::-1]
     
@@ -28,12 +23,7 @@ def plot_feature_importance(model, feature_names: List[str], top_n: int = 10):
     plt.show()
 
 def plot_confusion_matrix(confusion_matrix: np.ndarray):
-    """
-    Plot confusion matrix.
-    
-    Args:
-        confusion_matrix: Confusion matrix array
-    """
+    """Plot confusion matrix."""
     plt.figure(figsize=(8, 6))
     sns.heatmap(confusion_matrix, annot=True, fmt='d', cmap='Blues')
     plt.title('Confusion Matrix')
@@ -42,13 +32,7 @@ def plot_confusion_matrix(confusion_matrix: np.ndarray):
     plt.show()
 
 def plot_roc_curve(y_true: np.ndarray, y_pred_proba: np.ndarray):
-    """
-    Plot ROC curve.
-    
-    Args:
-        y_true: True labels
-        y_pred_proba: Predicted probabilities
-    """
+    """Plot ROC curve."""
     from sklearn.metrics import roc_curve, auc
     
     fpr, tpr, _ = roc_curve(y_true, y_pred_proba)
@@ -61,17 +45,12 @@ def plot_roc_curve(y_true: np.ndarray, y_pred_proba: np.ndarray):
     plt.ylim([0.0, 1.05])
     plt.xlabel('False Positive Rate')
     plt.ylabel('True Positive Rate')
-    plt.title('Receiver Operating Characteristic (ROC) Curve')
+    plt.title('ROC Curve')
     plt.legend(loc="lower right")
     plt.show()
 
 def print_metrics(metrics: Dict[str, Any]):
-    """
-    Print evaluation metrics in a formatted way.
-    
-    Args:
-        metrics: Dictionary of evaluation metrics
-    """
+    """Print evaluation metrics in a formatted way."""
     print("\nModel Evaluation Metrics:")
     print("-" * 50)
     print(f"Accuracy: {metrics['accuracy']:.4f}")

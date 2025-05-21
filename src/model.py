@@ -1,6 +1,4 @@
-"""
-Model module for training and evaluating the churn prediction model.
-"""
+# Churn prediction model using XGBoost and SMOTE
 
 import joblib
 import numpy as np
@@ -23,9 +21,6 @@ from .config import MODELS_DIR, RANDOM_STATE
 
 class ChurnPredictor:
     def __init__(self):
-        """
-        Initialize the ChurnPredictor with SMOTE and XGBoost pipeline.
-        """
         self.skf = StratifiedKFold(n_splits=5, shuffle=True, random_state=RANDOM_STATE)
         self.pipeline = Pipeline([
             ('smote', SMOTE(k_neighbors=3, sampling_strategy=0.7, random_state=RANDOM_STATE)),
@@ -46,29 +41,21 @@ class ChurnPredictor:
         self.feature_columns = None
 
     def train(self, X_train, y_train):
-        """
-        Train the model using the best parameters and pd.get_dummies encoding.
-        """
-        # Identify all categorical columns (object or category dtype)
+        # Get dummies for categorical features
         cat_cols = X_train.select_dtypes(include=['object', 'category']).columns.tolist()
-        # Apply pd.get_dummies
         X_train_encoded = pd.get_dummies(X_train, columns=cat_cols, drop_first=True)
-        # Save columns for later use
         self.feature_columns = X_train_encoded.columns.tolist()
-        # Fit the pipeline (SMOTE + XGBoost)
         self.pipeline.fit(X_train_encoded, y_train)
         self.model = self.pipeline
 
     def _preprocess_input(self, X):
+        # Match training data format
         cat_cols = X.select_dtypes(include=['object', 'category']).columns.tolist()
         X_encoded = pd.get_dummies(X, columns=cat_cols, drop_first=True)
-        # Add any missing columns (from training) as zeros
         for col in self.feature_columns:
             if col not in X_encoded:
                 X_encoded[col] = 0
-        # Ensure column order matches training
-        X_encoded = X_encoded[self.feature_columns]
-        return X_encoded
+        return X_encoded[self.feature_columns]
 
     def predict(self, X):
         X_processed = self._preprocess_input(X)
